@@ -24,6 +24,8 @@ const allMonthsIT = [
   "Dicembre",
 ]
 
+const appuntamenti = []
+
 // adesso andiamo ad usare now per trovare il MESE IN CUI SIAMO
 const currentMonthH1 = () => {
   const h1 = document.querySelector("h1") //prende il primo h1 nella pagina, quindi anche l'unico che ci sia
@@ -65,9 +67,69 @@ const createCellsCalendar = () => {
     dayH3DateValue.innerText = i + 1 // inserisco dentro questo h3 il numero corrente, basandomi sulla i più 1 perché la i parte da 0
     //adesso "appendo" l'h3 alla cella del div"
     div.appendChild(dayH3DateValue)
-    //appendo poi il div all'interno del calendario per ogni singolo giorno
+
+    // METTIAMO IL GIORNO CORRENTE IN EVIDENZA
+    // SE la cella equivale al giorno corrente gli diamo la classe color-epic
+    if (i + 1 === now.getDate()) {
+      div.classList.add("color-epic")
+    }
+
+    div.addEventListener("click", function () {
+      const preveoslySelected = document.querySelector(".day.selected")
+
+      if (preveoslySelected !== null) {
+        div.classList.remove("selected")
+      }
+      div.classList.add("selected")
+      //appendo poi il div all'interno del calendario per ogni singolo giorno
+    })
     emptyCalendarHTML.appendChild(div)
+    // per oggni giorno vado a pushare un array vuoto all'interno del master array del calendario
+    appuntamenti.push([])
   }
 }
 
 createCellsCalendar()
+
+// COME CREARE UN APPUNTAMENTO
+// un appuntamento sarà una STRINGA -> "12:30 - Commercialista"
+// usiamo un array per avere le varie stringhe innestate ognuna in un array che si rifà al giorno
+
+// ora gestiamo l'interazione con il FORM: il form predispone uno spazio per selezionare il g
+// (che già si riempie correttamente), per selezionare l'ORA e per scrivere un nome per l'app
+// quello che manca è interagire con il suo evento di submit e inserire la stringa dell'event
+// nel cassettino giusto dell'armadio
+const form = document.getElementById("meeting-form")
+form.addEventListener("submit", function (e) {
+  e.preventDefault() // fermiamo l'aggiornamento automatico della pagina
+  // decidiamo cosa fare quando il form viene inviato
+  // 1) raccoglierò i dati del form
+  // prendo prima i riferimenti ai DUE campi input!
+  const newMeetingTimeInput = document.getElementById("newMeetingTime") // input ora
+  const newMeetingNameInput = document.getElementById("newMeetingName") // input nome
+  // grazie a loro, posso recuperare il VALORE degli input -> proprietà .value
+  const newMeetingTime = newMeetingTimeInput.value // es. "12:00"
+  const newMeetingName = newMeetingNameInput.value // es. "Pranzo fuori"
+  // 2) comporrò la stringa relativa all'evento, es. "12:00 - Pranzo"
+  // const appointment = newMeetingTime + " - " + newMeetingName // forma classica
+  const appointment = `${newMeetingTime} - ${newMeetingName}` // forma backticks
+  // 3) pusho la stringa nell'arrayino corrispondente al giorno che ho cliccato
+  console.log("ECCO L'APPUNTAMENTO", appointment)
+  console.log("ora dobbiamo salvarlo nel cassettino giusto ... ")
+  //come trovo il cassettino giusto? prima, quando ho cliccato la cella, mi sono trasportato in basso
+  // a sx il numero corrispondente -> era il numero che appariva nella casella che ho cliccato
+  //recuperiamo intanto questo valore
+  const spanWithDay = document.getElementById("newMeetingDay") // questo è lo SPAN contenente il valore del giorno
+  // ora, da questo span, recupero il suo contenuto testuale con innerText
+
+  const meetingDay = spanWithDay.innerText // es. '31'
+  // questo è l'indizio più importante per capire in quale cassettino pushare l'evento
+  // solo che è una stringa, e rappresenta "l'etichetta" del giorno, non la posizione giusta nell'array
+  // la posizione giusta nell'array è VALORE-1
+  let meetingDayAsNumber = parseInt(meetingDay) // da "31" siamo arrivati a 31
+  // ora sottratto.1 per trovare l'indice corretto della cassettiera
+  meetingDayAsNumber-- // sottraggo 1
+  // ora meetingDayAsNumber è l'indice corretto per l'array di array
+  appointments[meetingDayAsNumber].push(appointment)
+  form.reset()
+})
