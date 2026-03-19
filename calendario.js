@@ -42,7 +42,32 @@ currentMonthH1()
 
 const numDayOfMonth = () => {
   const indexMonth = now.getMonth() // troviamo il numero del mese attuale come prima
-  const currentYear = now.getFullYear() // tora il numero intero dell'anno corrente // Es. 2026
+  const currentYear = now.getFullYear() // torna il numero intero dell'anno corrente // Es. 2026
   //   ho bisogno di creare una Date es. -> new Date(2026,3,1) yyyy-mm-dd -> 1 aprile 2026
-  const firstDayNexMonth = new Date(currentYear, indexMonth + 1, 1) // le date sono scritte all'americana (mannaggia a loro)
+  const lastDayOfMonth = new Date(currentYear, indexMonth + 1, 0 /*1*/) // le date sono scritte all'americana (mannaggia a loro)
+  // ma se noi invece di chiedere il primo giorno del mese con 1 ci mettiamo lo 0, lui ritornerà l'ultimo giorno del mese corrente
+
+  // ora posso estrapolare il numero dell'ultimo giorno in maniera da poter creare le celle del mese
+  const numberOfDays = lastDayOfMonth.getDate() // restituisce il numero del giorno calcolato in lastDayOfMonth in forma di number
+  return numberOfDays
 }
+const numOfCells = numDayOfMonth() // adesso ABBIAMO IL NUMERO DI CELLE DA CREARE grazie al numero dei giorni del mese corrente
+// che abbiamo ottenuto grazie alla funzione
+
+const createCellsCalendar = () => {
+  // con questa funzione andremo ad appendere il numero delle celle alla sezione del calendario
+  emptyCalendarHTML = document.getElementById("calendar") // prendo la sezione interessate dove creare le celle tramite l'id
+  for (let i = 0; i < numOfCells; i++) {
+    //andiamo a creare una cella
+    const div = document.createElement("div") // creo un elemento div
+    div.classList.add("day") // aggiungo la classe day all'elemento div
+    const dayH3DateValue = document.createElement("h3") // creo l'h3 dove verra "stampato" il giorno della data
+    dayH3DateValue.innerText = i + 1 // inserisco dentro questo h3 il numero corrente, basandomi sulla i più 1 perché la i parte da 0
+    //adesso "appendo" l'h3 alla cella del div"
+    div.appendChild(dayH3DateValue)
+    //appendo poi il div all'interno del calendario per ogni singolo giorno
+    emptyCalendarHTML.appendChild(div)
+  }
+}
+
+createCellsCalendar()
