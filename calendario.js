@@ -131,5 +131,11 @@ form.addEventListener("submit", function (e) {
   meetingDayAsNumber-- // sottraggo 1
   // ora meetingDayAsNumber è l'indice corretto per l'array di array
   appointments[meetingDayAsNumber].push(appointment)
+
+  // ora andiamo a colorare la cella nel calendario in cui abbiamo gli appuntamenti
+  const dot = document.createElement("span") //creo lo span per inserire il punto
+  dot.classList.add("dot")
+  const selectedCell = document.querySelector(".selected")
+  selectedCell.appendChild(dot)
   form.reset()
 })
