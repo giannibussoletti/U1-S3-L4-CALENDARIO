@@ -137,5 +137,26 @@ form.addEventListener("submit", function (e) {
   dot.classList.add("dot")
   const selectedCell = document.querySelector(".selected")
   selectedCell.appendChild(dot)
+
+  //riempiamo la sezione degli appuntamenti con gli eventi del giorni
+  riempiListaAppuntamenti()
+
+  // andiamo a mostrare la sezione degli appuntamenti
+  mostraAppuntamenti()
+
   form.reset()
 })
+
+const riempiListaAppuntamenti = () => {
+  //la funzione riempirà la lista che verra selezionata
+  const list = document.getElementById("appointmentList")
+  // andiamo a riempire
+  // come faccio ad andare a scegliere l'array
+}
+
+// Infine dobbiamo mostrare la lista di appuntamenti giornalieri
+// di defaul ha display:none come attributo css
+const mostraAppuntamenti = () => {
+  const divAppuntamenti = document.getElementById("appointments")
+  divAppuntamenti.style.display = "block"
+}
